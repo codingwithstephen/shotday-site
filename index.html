@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="How to set up and use ShotDay, the private weekly GLP-1 shot tracker for iPhone.">
+<title>ShotDay User Manual</title>
+<link rel="icon" href="images/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: sticky contents rail on the left, reading column with phone screenshots set beside the steps they illustrate. */
+:root {
+  --bg: #f5f8f7;
+  --surface: #ffffff;
+  --fg: #142321;
+  --muted: #56706c;
+  --line: #d9e4e1;
+  --accent: #0d9488;
+  --accent-soft: #dcf1ee;
+  --warn: #c2410c;
+  --warn-soft: #fdeee4;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --ok: #15803d;
+  --phone: #1b2a28;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", -apple-system, "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1615; --surface: #16211f; --fg: #e4eeec; --muted: #9bb3ae; --line: #2a3a37;
+    --accent: #35c9b8; --accent-soft: #143633; --warn: #fb923c; --warn-soft: #3a2416;
+    --danger: #f97066; --danger-soft: #3b1a17; --ok: #4ade80; --phone: #000000; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1615; --surface: #16211f; --fg: #e4eeec; --muted: #9bb3ae; --line: #2a3a37;
+  --accent: #35c9b8; --accent-soft: #143633; --warn: #fb923c; --warn-soft: #3a2416;
+  --danger: #f97066; --danger-soft: #3b1a17; --ok: #4ade80; --phone: #000000; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  padding-inline: 20px; padding-block: 0 64px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.15rem; margin-top: 8px; }
+p { margin: 0; }
+strong { font-weight: 600; }
+
+.shell { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; }
+
+/* Header */
+.masthead { max-width: 1120px; margin: 0 auto; padding-block: 48px 36px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.appicon { width: 72px; height: 72px; border-radius: 17px; background: linear-gradient(150deg, #1ab39e, #066b73); display: grid; place-items: center; flex: none; }
+.appicon svg { width: 44px; height: 44px; }
+.masthead h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+.masthead p { color: var(--muted); font-size: 1.1rem; margin-top: 4px; }
+.masthead .meta { font-size: 0.85rem; color: var(--muted); margin-top: 8px; letter-spacing: 0.02em; }
+
+/* Contents rail */
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 0.92rem; }
+nav.toc .label { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: toc; }
+nav.toc li { counter-increment: toc; }
+nav.toc a { display: flex; gap: 10px; padding: 5px 10px; border-radius: 8px; color: var(--fg); text-decoration: none; }
+nav.toc a::before { content: counter(toc); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 1.2em; text-align: right; }
+nav.toc a:hover { background: var(--accent-soft); }
+
+main { min-width: 0; display: grid; gap: 64px; }
+section { display: grid; gap: 16px; scroll-margin-top: 24px; }
+section > .eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; font-weight: 600; color: var(--accent); }
+.lede { color: var(--muted); max-width: 62ch; }
+.prose { display: grid; gap: 14px; max-width: 62ch; }
+
+/* Step text beside screenshot */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 40px; align-items: start; }
+.split.two-phones { grid-template-columns: minmax(0, 1fr) auto; }
+.phones { display: flex; gap: 16px; flex-wrap: wrap; }
+figure { margin: 0; display: grid; gap: 8px; justify-items: center; }
+.phone { width: 240px; max-width: 100%; border-radius: 34px; padding: 7px; background: var(--phone); box-shadow: 0 18px 40px -22px rgba(6, 60, 56, 0.55); }
+.phone img { display: block; width: 100%; border-radius: 28px; }
+figcaption { font-size: 0.82rem; color: var(--muted); }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
+ol.steps li { counter-increment: step; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start; }
+ol.steps li::before { content: counter(step); width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 0.9rem; display: grid; place-items: center; margin-top: 1px; }
+
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 600; }
+td:first-child { font-weight: 600; white-space: nowrap; }
+
+/* Body-map legend: real dot styles from the app */
+.legend { display: grid; gap: 10px; }
+.legend div { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; }
+.dot { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; font-size: 0.72rem; font-weight: 700; color: var(--fg); }
+.dot.sel { background: var(--accent); border-color: var(--accent); color: #fff; font-size: 1rem; }
+.dot.sug { border: 2.5px dashed var(--ok); }
+.dot.recent { background: color-mix(in srgb, #f97316 35%, var(--surface)); }
+
+/* Callouts */
+.callout { border-radius: 14px; padding: 16px 18px; display: grid; gap: 6px; max-width: 70ch; }
+.callout.note { background: var(--accent-soft); }
+.callout.urgent { background: var(--danger-soft); border-left: 4px solid var(--danger); }
+.callout.urgent strong:first-child { color: var(--danger); }
+.callout.caution { background: var(--warn-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 5px 12px; border-radius: 999px; background: var(--danger); color: #fff; font-size: 0.88rem; font-weight: 500; }
+
+.price { display: flex; gap: 14px; flex-wrap: wrap; }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; min-width: 0; flex: 1 1 180px; }
+.plan .amount { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.plan .per { color: var(--muted); font-size: 0.9rem; }
+
+/* FAQ */
+details { border-bottom: 1px solid var(--line); padding-block: 12px; max-width: 70ch; }
+details:first-of-type { border-top: 1px solid var(--line); }
+summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+details[open] summary::after { content: "−"; }
+details p { margin-top: 8px; color: var(--muted); }
+
+.disclaimer { border-top: 1px solid var(--line); padding-top: 20px; font-size: 0.85rem; color: var(--muted); max-width: 70ch; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  nav.toc { position: static; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  nav.toc ol { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .split, .split.two-phones { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .phones, .split > figure { justify-content: center; }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; padding-inline: 16px; }
+  .phone { width: 200px; }
+  .masthead { padding-block: 32px 24px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="appicon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M33 6l9 9M37.5 10.5l-6 6M30 13l5 5-16 16-6 1 1-6z" />
+      <path d="M13 35l-6 6" />
+      <path d="M22 22l3 3M18 26l3 3" />
+    </svg>
+  </div>
+  <div>
+    <h1>ShotDay User Manual</h1>
+    <p>Your weekly GLP-1 shot: reminders, site rotation, side effects and weight.</p>
+    <div class="meta">For ShotDay 1.0 on iPhone (iOS 18 or later)</div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Contents">
+    <div class="label">Contents</div>
+    <ol>
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#today">The Today screen</a></li>
+      <li><a href="#log-shot">Logging a shot</a></li>
+      <li><a href="#sites">Rotating sites</a></li>
+      <li><a href="#side-effects">Side effects</a></li>
+      <li><a href="#weight">Weight</a></li>
+      <li><a href="#insights">Insights and history</a></li>
+      <li><a href="#reminders">Reminders</a></li>
+      <li><a href="#settings">Settings</a></li>
+      <li><a href="#pro">ShotDay Pro</a></li>
+      <li><a href="#doctor">Doctor summary</a></li>
+      <li><a href="#privacy">Privacy and your data</a></li>
+      <li><a href="#faq">Questions</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <div class="callout note">
+      <strong>ShotDay is a personal log, not medical advice.</strong>
+      <p>It never calculates, recommends or changes doses. Always follow your prescriber's instructions. If you feel very unwell, contact your doctor or emergency services.</p>
+    </div>
+
+    <section id="start">
+      <span class="eyebrow">1 · Getting started</span>
+      <h2>Set up your treatment</h2>
+      <div class="split two-phones">
+        <div class="prose">
+          <p>When you first open ShotDay, tap <strong>Get started</strong> and fill in:</p>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Setting</th><th>What to enter</th></tr>
+              <tr><td>Medication</td><td>Semaglutide (e.g. Ozempic, Wegovy), Tirzepatide (e.g. Mounjaro, Zepbound) or Other GLP-1.</td></tr>
+              <tr><td>Current dose</td><td>Exactly as prescribed, e.g. <em>2.5 mg</em>. It's a label for your records; ShotDay doesn't calculate anything from it.</td></tr>
+              <tr><td>Shot day</td><td>The day of the week you inject.</td></tr>
+              <tr><td>Time</td><td>When you usually inject. Your reminder goes off at this time.</td></tr>
+              <tr><td>Reminder</td><td>Leave on to get a notification every week.</td></tr>
+            </table>
+          </div>
+          <p>Switch on the acknowledgement that ShotDay is a log, not medical advice, then tap <strong>Start tracking</strong>. The button stays greyed out until you've entered a dose and switched on the acknowledgement.</p>
+          <p>If you turned reminders on, iOS asks whether ShotDay can send notifications. Tap <strong>Allow</strong> so you don't miss shot day.</p>
+        </div>
+        <div class="phones">
+          <figure><div class="phone"><img src="images/00-welcome.png" alt="ShotDay welcome screen listing reminders, site rotation, patterns and privacy" width="414" height="900"></div><figcaption>Welcome</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="today">
+      <span class="eyebrow">2 · The Today screen</span>
+      <h2>Everything for this week, on one screen</h2>
+      <div class="split">
+        <div class="prose">
+          <h3>Next shot</h3>
+          <p>Shows how long until your next shot, and the ring fills up through the week.</p>
+          <ul class="plain">
+            <li><strong>Today, Tomorrow or In 3 days</strong>: your next scheduled shot.</li>
+            <li><strong>Time for your shot</strong> (orange): it's shot day and you haven't logged this week's shot yet.</li>
+          </ul>
+          <p>A shot taken up to two days early or late still counts for that week.</p>
+          <h3>Next site</h3>
+          <p>The injection site ShotDay suggests next (the one you've used least recently), and where you injected last time.</p>
+          <h3>Quick logs and recent shots</h3>
+          <p><strong>Log side effects</strong> and <strong>Log weight</strong> open their loggers. The weight button only shows if weight tracking is on. <strong>Recent shots</strong> lists your last three, with date, site and dose.</p>
+        </div>
+        <figure><div class="phone"><img src="images/01-today.png" alt="Today screen showing next shot today, next site abdomen lower right, quick log buttons and recent shots" width="414" height="900"></div><figcaption>Today</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="log-shot">
+      <span class="eyebrow">3 · Logging a shot</span>
+      <h2>Log a shot in a few taps</h2>
+      <div class="split">
+        <div class="prose">
+          <ol class="steps">
+            <li><span>Tap <strong>Log shot</strong> on the Today screen.</span></li>
+            <li><span><strong>Taken</strong> is set to now. Change it if you're logging a shot from earlier.</span></li>
+            <li><span><strong>Dose</strong> is filled in with your current dose. If your prescriber changed it, edit it here and ShotDay remembers the new dose.</span></li>
+            <li><span>Choose the <strong>injection site</strong> on the body map. The suggested site is already selected.</span></li>
+            <li><span>Add <strong>notes</strong> if you like, then tap <strong>Save</strong>.</span></li>
+          </ol>
+          <h3>Reading the body map</h3>
+          <p>The figure faces you, like looking at another person, so <strong>their right side is on your left</strong>. The small R and L labels show which side is which.</p>
+          <div class="legend" role="list">
+            <div role="listitem"><span class="dot sel" aria-hidden="true">✓</span><span>The site you've selected</span></div>
+            <div role="listitem"><span class="dot sug" aria-hidden="true"></span><span>Suggested next site (green dashed ring)</span></div>
+            <div role="listitem"><span class="dot recent" aria-hidden="true">7d</span><span>Used in the last two weeks; the number is days ago</span></div>
+            <div role="listitem"><span class="dot" aria-hidden="true">35d</span><span>Used more than two weeks ago</span></div>
+            <div role="listitem"><span class="dot" aria-hidden="true"></span><span>Never used</span></div>
+          </div>
+          <p>There are 8 sites: four on the abdomen (upper and lower, left and right), the front of each thigh, and each upper arm. Use only the sites your prescriber has approved for you.</p>
+        </div>
+        <figure><div class="phone"><img src="images/02-log-shot.png" alt="Log shot sheet with date, dose and a body map with day counts on each site" width="414" height="900"></div><figcaption>Log shot</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="sites">
+      <span class="eyebrow">4 · Rotating sites</span>
+      <h2>See where to inject next</h2>
+      <div class="split">
+        <div class="prose">
+          <p>The <strong>Sites</strong> tab shows the body map with all your sites, plus every site and when you last used it, most recent first. The suggested next site is marked <strong>Next</strong>.</p>
+          <p>ShotDay always suggests the site you've used least recently, and sites you've never used come first. Rotating sites helps reduce irritation and lumps under the skin.</p>
+        </div>
+        <figure><div class="phone"><img src="images/04-sites.png" alt="Sites tab with body map, suggested site ringed in green and a last-used list" width="414" height="900"></div><figcaption>Sites</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="side-effects">
+      <span class="eyebrow">5 · Side effects</span>
+      <h2>Log how you feel</h2>
+      <div class="split">
+        <div class="prose">
+          <ol class="steps">
+            <li><span>Tap <strong>Log side effects</strong> on the Today screen.</span></li>
+            <li><span>Tap every symptom you have. Tap again to deselect.</span></li>
+            <li><span>Choose a severity: <strong>Mild</strong>, <strong>Moderate</strong> or <strong>Severe</strong>.</span></li>
+            <li><span>Add notes if you like, then tap <strong>Save</strong>.</span></li>
+          </ol>
+          <div class="callout urgent">
+            <strong>Urgent symptoms</strong>
+            <div class="chips"><span class="chip">Severe stomach pain</span><span class="chip">Can't keep fluids down</span><span class="chip">Swelling or trouble breathing</span></div>
+            <p>If you log any of these, or choose Severe, ShotDay reminds you to contact your doctor, and to call emergency services if you have severe stomach pain that won't go away, can't keep fluids down, or have swelling of the face or throat or trouble breathing.</p>
+            <p><strong>Get help first, log it later.</strong> ShotDay can't judge how serious a symptom is and doesn't alert anyone for you.</p>
+          </div>
+        </div>
+        <figure><div class="phone"><img src="images/03-side-effects.png" alt="Side effects sheet with symptom chips, urgent symptoms in red and a severity picker" width="414" height="900"></div><figcaption>Side effects</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="weight">
+      <span class="eyebrow">6 · Weight</span>
+      <h2>Track your weight, if you want to</h2>
+      <div class="prose">
+        <ol class="steps">
+          <li><span>Tap <strong>Log weight</strong> on the Today screen.</span></li>
+          <li><span>Enter your weight in the units shown (lb or kg; change units in Settings).</span></li>
+          <li><span>Change the date if needed, then tap <strong>Save</strong>.</span></li>
+        </ol>
+        <p>Weight tracking is optional. Turn off <strong>Track weight</strong> in Settings and the weight button and chart disappear.</p>
+      </div>
+    </section>
+
+    <section id="insights">
+      <span class="eyebrow">7 · Insights and history</span>
+      <h2>Spot patterns between doctor visits</h2>
+      <div class="split">
+        <div class="prose">
+          <ul class="plain">
+            <li><strong>Weight</strong> (Pro): a chart of your weight over time, with the total change since your first entry.</li>
+            <li><strong>Side effects by day after shot</strong> (Pro): your symptoms counted by how many days after a shot they happened (Day 0 is shot day), e.g. "Most side effects on day 1". This can help you and your doctor plan around your hardest days.</li>
+            <li><strong>Shot history</strong> (free): every shot you've logged, newest first.</li>
+          </ul>
+          <p><strong>To delete a shot</strong>, for example one you logged twice, swipe left on it in Shot history and tap <strong>Delete</strong>. This can't be undone.</p>
+          <p>Without Pro, the charts show a blurred sample. Your own data appears as soon as you unlock Pro.</p>
+        </div>
+        <figure><div class="phone"><img src="images/05-insights.png" alt="Insights tab with a falling weight chart and a bar chart peaking on day 1 after the shot" width="414" height="900"></div><figcaption>Insights (Pro)</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="reminders">
+      <span class="eyebrow">8 · Reminders</span>
+      <h2>Never miss shot day</h2>
+      <div class="prose">
+        <p>With reminders on, you get a notification at your shot time on your shot day, every week, whether or not you've logged a shot yet.</p>
+        <ul class="plain">
+          <li>Turn reminders on or off in <strong>Settings → Shot day reminder</strong>.</li>
+          <li>Changing your shot day or time in Settings updates the reminder automatically.</li>
+        </ul>
+        <div class="callout caution">
+          <strong>Not getting reminders?</strong>
+          <p>Open the iPhone Settings app → Notifications → ShotDay and make sure notifications are allowed. If permission was denied, ShotDay shows a red note under the reminder switch.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="settings">
+      <span class="eyebrow">9 · Settings</span>
+      <h2>Change your treatment or preferences</h2>
+      <div class="split">
+        <div class="table-wrap">
+          <table>
+            <tr><th>Section</th><th>What you can do</th></tr>
+            <tr><td>Treatment</td><td>Change medication and current dose.</td></tr>
+            <tr><td>Schedule</td><td>Change your shot day and time.</td></tr>
+            <tr><td>Reminder</td><td>Turn the weekly notification on or off.</td></tr>
+            <tr><td>Weight</td><td>Turn weight tracking on or off; switch between lb and kg. Existing entries convert automatically.</td></tr>
+            <tr><td>ShotDay Pro</td><td>Unlock Pro, share your doctor summary or manage your subscription.</td></tr>
+            <tr><td>Privacy &amp; safety</td><td>How your data is stored and what ShotDay does and doesn't do.</td></tr>
+          </table>
+        </div>
+        <figure><div class="phone"><img src="images/06-settings.png" alt="Settings screen with treatment, dose and schedule fields" width="414" height="900"></div><figcaption>Settings</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="pro">
+      <span class="eyebrow">10 · ShotDay Pro</span>
+      <h2>What Pro adds</h2>
+      <div class="prose">
+        <p>Logging shots, site rotation, side effects, weight and reminders are <strong>free forever</strong>. Pro adds weight trend charts, side-effect patterns by day, and a summary to share with your doctor.</p>
+        <div class="price">
+          <div class="plan"><div class="amount">$39.99</div><div class="per">per year · 7-day free trial</div></div>
+          <div class="plan"><div class="amount">$4.99</div><div class="per">per month · 7-day free trial</div></div>
+        </div>
+        <p class="lede">Prices may vary by country. The free trial is for new subscribers.</p>
+        <ul class="plain">
+          <li><strong>Cancel anytime</strong> in the iPhone Settings app → your name → Subscriptions → ShotDay, or from Settings → ShotDay Pro → Manage subscription. Cancel at least 24 hours before your trial or billing period ends to avoid being charged.</li>
+          <li><strong>New phone or reinstalled?</strong> Open the Pro screen and tap <strong>Restore Purchases</strong>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="doctor">
+      <span class="eyebrow">11 · Doctor summary</span>
+      <h2>Share a summary with your doctor</h2>
+      <div class="prose">
+        <p>With Pro, go to <strong>Settings → Share summary with your doctor</strong>. ShotDay creates a plain-text summary with:</p>
+        <ul class="plain">
+          <li>Your medication, current dose (as you entered it) and shot day</li>
+          <li>Your last 12 shots, with date, dose and site</li>
+          <li>Your weight change, if you track weight</li>
+          <li>Your side effects from the last 30 days, and how often each happened</li>
+        </ul>
+        <p>Send it by Messages, Mail or AirDrop, or save it to Notes or Files. Nothing leaves your phone until you choose where to share it.</p>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <span class="eyebrow">12 · Privacy and your data</span>
+      <h2>Your data stays on your iPhone</h2>
+      <div class="prose">
+        <ul class="plain">
+          <li>ShotDay has no account, no servers, no ads and no tracking.</li>
+          <li>Your data is part of your normal iPhone backup (iCloud or computer), so it comes back if you restore your phone from a backup.</li>
+          <li><strong>Deleting the app deletes all your ShotDay data.</strong> Share a summary first if you want a copy.</li>
+          <li>ShotDay doesn't currently read from or write to Apple Health.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="faq">
+      <span class="eyebrow">13 · Questions</span>
+      <h2>Troubleshooting and FAQ</h2>
+      <div>
+        <details><summary>It says "Time for your shot" but I already took it.</summary><p>Log it with Log shot. If you took it earlier, change the Taken date and time. A shot within two days of your scheduled day counts for that week.</p></details>
+        <details><summary>I took my shot on a different day this week.</summary><p>That's fine. Log it with the right date. To change your regular day, update Shot day in Settings.</p></details>
+        <details><summary>I logged a shot by mistake.</summary><p>Go to Insights → Shot history, swipe left on the shot, and tap Delete.</p></details>
+        <details><summary>My dose changed.</summary><p>Update Current dose in Settings, or edit the dose when you log your next shot. Past shots keep the dose they were logged with.</p></details>
+        <details><summary>Can ShotDay tell me what dose to take, or convert mg to units?</summary><p>No. ShotDay never calculates or suggests doses, because a wrong dose can be dangerous. Use the dose and instructions from your prescriber and pharmacist.</p></details>
+        <details><summary>The Pro screen says "Subscription Unavailable."</summary><p>Check your internet connection and that you're signed in to the App Store, then try again.</p></details>
+        <details><summary>Can I use ShotDay for a daily medication?</summary><p>ShotDay is built for once-weekly injections. Daily medications aren't supported yet.</p></details>
+      </div>
+    </section>
+
+    <p class="disclaimer"><a href="privacy.html#privacy">Privacy policy</a> · <a href="privacy.html#terms">Terms of use</a> · <a href="privacy.html#support">Support</a><br>ShotDay is a personal tracking tool and does not provide medical advice, diagnosis or treatment. Medication names are trademarks of their respective owners and are used only to help you identify your medication. Screenshots show sample data.</p>
+  </main>
+</div>
+</body>
+</html>
